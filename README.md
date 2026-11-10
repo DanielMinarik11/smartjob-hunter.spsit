@@ -49,7 +49,7 @@ ng test
 Email/password registration, sign-in, email verification, profile-name updates,
 and sign-out use Firebase Authentication. Add the public Web app configuration
 (`apiKey`, `authDomain`, `projectId`, and `appId`) to
-`src/app/firebase.config.ts`, and enable the Email/Password provider in Firebase
+`src/app/core/config/firebase.config.ts`, and enable the Email/Password provider in Firebase
 Console under Authentication → Sign-in method. Never add a service-account
 private key to the browser application.
 

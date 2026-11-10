@@ -202,7 +202,7 @@
 
     <div *ngIf="!auth.isConfigured" class="auth-config-warning" role="status">
       Firebase Web konfigurácia chýba. Doplň `apiKey`, `authDomain`, `projectId` a `appId`
-      do <code>src/app/firebase.config.ts</code> a povoľ E-mail/heslo vo Firebase Console.
+      do <code>src/app/core/config/firebase.config.ts</code> a povoľ E-mail/heslo vo Firebase Console.
     </div>
     <p *ngIf="authError()" class="auth-message error-message" role="alert">{{ authError() }}</p>
     <p *ngIf="authNotice()" class="auth-message success-message" role="status">{{ authNotice() }}</p>

@@ -11,7 +11,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
-import { firebaseConfig } from './firebase.config';
+import { firebaseConfig } from '../../../core/config/firebase.config';
 
 @Injectable({ providedIn: 'root' })
 export class FirebaseAuthService {
@@ -98,7 +98,7 @@ export class FirebaseAuthService {
   private requireAuth(): Auth {
     if (!this.auth) {
       throw new Error(
-        'Firebase Web konfigurácia chýba. Doplň ju v src/app/firebase.config.ts.',
+        'Firebase Web konfigurácia chýba. Doplň ju v src/app/core/config/firebase.config.ts.',
       );
     }
 
