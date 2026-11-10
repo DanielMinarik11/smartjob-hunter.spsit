@@ -1,0 +1,315 @@
+﻿<div class="page-shell">
+  <header class="hero-section">
+    <div class="header-bar">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <span>SmartJob Hunter</span>
+      </div>
+
+      <button class="profile-button" type="button" aria-label="Profil" (click)="openAccount()">
+        <ng-container *ngIf="auth.user(); else guestIcon">{{ userInitials() }}</ng-container>
+        <ng-template #guestIcon>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z"/>
+          </svg>
+        </ng-template>
+      </button>
+    </div>
+
+    <div class="hero-content">
+      <p class="eyebrow">
+        <span class="dot"></span>
+        Tvoja ďalšia kapitola sa začína tu
+      </p>
+
+      <h1>
+        Nájdi prácu, ktorá ti
+        <span>sadne.</span>
+      </h1>
+
+      <p class="subtitle">
+        SmartJob Hunter ti pomôže objaviť príležitosti, ktoré zodpovedajú tvojim
+        skúsenostiam aj predstavám.
+      </p>
+
+      <ul class="benefits" aria-label="Výhody">
+        <li>Pracovné miesta od najlepších employerov</li>
+        <li>Jednoduché vyhľadávanie</li>
+        <li>Práva na príležitosť</li>
+      </ul>
+    </div>
+
+    <section class="search-panel" aria-label="Vyhľadávanie pracovných ponúk">
+      <div class="panel-header">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M10 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm10 18-6.25-6.25 1.41-1.41L21.41 18.6 20 20Z"/>
+          </svg>
+        </div>
+        <h2>Čo hľadáš?</h2>
+      </div>
+
+      <p class="panel-description">Uprav filtre a nájdi svoju ďalšiu príležitosť.</p>
+
+      <div class="field-grid">
+        <label class="field">
+          <span>Pracovná pozícia</span>
+          <input type="text" placeholder="napr. vývojár, účtovník" />
+        </label>
+
+        <label class="field">
+          <span>Mesto alebo región</span>
+          <input type="text" placeholder="napr. Bratislava" />
+        </label>
+
+        <label class="field">
+          <span>Minimálna mzda</span>
+          <input type="text" placeholder="Např. 1 200 €" />
+        </label>
+
+        <label class="field">
+          <span>Maximálna mzda</span>
+          <input type="text" placeholder="Např. 2 000 €" />
+        </label>
+      </div>
+
+      <div class="actions">
+        <button class="primary-button" type="button">Vyhľadať ponuky</button>
+        <button class="secondary-button" type="button" (click)="clearFilters()">Vymazať filtre</button>
+      </div>
+    </section>
+  </header>
+
+  <main class="jobs-section">
+    <div class="jobs-header">
+      <div class="section-copy">
+        <p class="section-kicker">Príležitosti pre teba</p>
+        <h2>Aktuálne pracovné ponuky</h2>
+      </div>
+
+      <div class="jobs-tools">
+        <button class="add-button" type="button" (click)="toggleForm()">Pridať ponuku</button>
+        <span class="count-badge">{{ jobs().length }} ponúk</span>
+      </div>
+    </div>
+
+    <section *ngIf="jobFormOpen()" class="job-form-panel" aria-label="Pridať novú pracovnú ponuku">
+      <form class="job-form" (ngSubmit)="submitJob()">
+        <div class="form-grid">
+          <label>
+            <span>Názov firmy</span>
+            <input type="text" [(ngModel)]="jobForm.company" name="company" placeholder="Napr. SmartVision" required />
+          </label>
+
+          <label>
+            <span>Názov pozície</span>
+            <input type="text" [(ngModel)]="jobForm.title" name="title" placeholder="Napr. Frontend developer" required />
+          </label>
+
+          <label>
+            <span>Mesto</span>
+            <input type="text" [(ngModel)]="jobForm.location" name="location" placeholder="Napr. Košice" />
+          </label>
+
+          <label>
+            <span>Typ pracovného pomeru</span>
+            <select [(ngModel)]="jobForm.type" name="type">
+              <option>Plný úväzok</option>
+              <option>Polovičný úväzok</option>
+              <option>Pracovný pomer na dobu určitú</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Pracovný režim</span>
+            <select [(ngModel)]="jobForm.remote" name="remote">
+              <option>Plný úväzok</option>
+              <option>Hybrid</option>
+              <option>Remote</option>
+              <option>Flexibilné časy</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Min. mzda</span>
+            <input type="number" [(ngModel)]="jobForm.salaryMin" name="salaryMin" min="0" placeholder="1200" />
+          </label>
+
+          <label>
+            <span>Max. mzda</span>
+            <input type="number" [(ngModel)]="jobForm.salaryMax" name="salaryMax" min="0" placeholder="1800" />
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-button" type="submit">Uložiť ponuku</button>
+          <button class="secondary-button" type="button" (click)="toggleForm()">Zrušiť</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="cards-grid" aria-label="Aktuálne ponuky">
+      <article class="job-card" *ngFor="let job of jobs(); trackBy: trackJob">
+        <div class="job-card-top">
+          <div class="avatar" [style.background]="job.color">{{ job.letter }}</div>
+          <button class="favorite-button" type="button" [class.active]="job.favorite" (click)="toggleFavorite(job.id)" aria-label="Uložiť ponuku">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21.35 10.55 20C5.4 15.36 2 12.28 2 8.5A4.5 4.5 0 0 1 6.5 4c1.74 0 3.41.81 4.5 2.09A6.1 6.1 0 0 1 15.5 4 4.5 4.5 0 0 1 20 8.5c0 3.78-3.4 6.86-8.55 11.5L12 21.35Z"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="job-company">{{ job.company }}</div>
+        <div class="job-title">{{ job.title }}</div>
+
+        <div class="job-meta">
+          <span>📍 {{ job.location }}</span>
+          <span>•</span>
+          <span>{{ job.type }}</span>
+        </div>
+
+        <div class="card-bottom">
+          <div class="salary">{{ job.salaryMin | number: '1.0-0' }}€ - {{ job.salaryMax | number: '1.0-0' }}€</div>
+          <div class="date-row">
+            <span>{{ job.date }}</span>
+            <button class="remove-button" type="button" aria-label="Vymazať ponuku" (click)="removeJob(job.id)">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 6h14v2H5V6Zm2 3h10l-1 11H8L7 9Zm3-6h4l1 2h-6l1-2Z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>
+
+<div *ngIf="authDialogOpen()" class="account-overlay" (click)="closeAccountDialogs()">
+  <section
+    class="account-dialog auth-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="auth-title"
+    (click)="$event.stopPropagation()"
+  >
+    <button class="dialog-close" type="button" aria-label="Zavrieť" (click)="closeAccountDialogs()">×</button>
+    <div class="auth-mark">S</div>
+    <p class="section-kicker">SmartJob Hunter</p>
+    <h2 id="auth-title">{{ authMode() === 'login' ? 'Vitaj späť' : 'Vytvor si účet' }}</h2>
+    <p class="dialog-description">
+      {{ authMode() === 'login' ? 'Prihlás sa a pokračuj v hľadaní práce.' : 'Zaregistruj sa a ulož si svoje pracovné príležitosti.' }}
+    </p>
+
+    <div *ngIf="!auth.isConfigured" class="auth-config-warning" role="status">
+      Firebase Web konfigurácia chýba. Doplň `apiKey`, `authDomain`, `projectId` a `appId`
+      do <code>src/app/firebase.config.ts</code> a povoľ E-mail/heslo vo Firebase Console.
+    </div>
+    <p *ngIf="authError()" class="auth-message error-message" role="alert">{{ authError() }}</p>
+    <p *ngIf="authNotice()" class="auth-message success-message" role="status">{{ authNotice() }}</p>
+
+    <form class="auth-form" (ngSubmit)="submitAuth()">
+      <label *ngIf="authMode() === 'register'">
+        <span>Meno</span>
+        <input
+          type="text"
+          [(ngModel)]="authForm.name"
+          name="name"
+          autocomplete="name"
+          placeholder="Ako ťa máme oslovovať"
+          required
+        />
+      </label>
+      <label>
+        <span>E-mail</span>
+        <input
+          type="email"
+          [(ngModel)]="authForm.email"
+          name="email"
+          autocomplete="email"
+          placeholder="meno@email.sk"
+          required
+        />
+      </label>
+      <label>
+        <span>Heslo</span>
+        <input
+          type="password"
+          [(ngModel)]="authForm.password"
+          name="password"
+          [attr.autocomplete]="authMode() === 'register' ? 'new-password' : 'current-password'"
+          minlength="6"
+          placeholder="Aspoň 6 znakov"
+          required
+        />
+      </label>
+      <button class="primary-button auth-submit" type="submit" [disabled]="authBusy() || !auth.isConfigured">
+        {{ authBusy() ? 'Spracúvam…' : authMode() === 'login' ? 'Prihlásiť sa' : 'Vytvoriť účet' }}
+      </button>
+    </form>
+
+    <p class="auth-switch">
+      {{ authMode() === 'login' ? 'Ešte nemáš účet?' : 'Už máš účet?' }}
+      <button type="button" (click)="switchAuthMode(authMode() === 'login' ? 'register' : 'login')">
+        {{ authMode() === 'login' ? 'Zaregistruj sa' : 'Prihlás sa' }}
+      </button>
+    </p>
+  </section>
+</div>
+
+<div *ngIf="profileDialogOpen()" class="account-overlay" (click)="closeAccountDialogs()">
+  <section
+    class="account-dialog profile-dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="profile-title"
+    (click)="$event.stopPropagation()"
+  >
+    <button class="dialog-close" type="button" aria-label="Zavrieť" (click)="closeAccountDialogs()">×</button>
+    <h2 id="profile-title">Môj profil</h2>
+    <div class="profile-identity">
+      <div class="profile-avatar">{{ userInitials() }}</div>
+      <div class="profile-identity-copy">
+        <strong>{{ auth.user()?.email }}</strong>
+        <span>Účet aktívny</span>
+      </div>
+    </div>
+    <div class="profile-divider"></div>
+    <h3>Informácie o profile</h3>
+    <dl class="profile-details">
+      <div><dt>E-mail</dt><dd>{{ auth.user()?.email }}</dd></div>
+      <div><dt>Stav verifikácie</dt><dd>{{ auth.user()?.emailVerified ? 'Overený' : 'Neoverený' }}</dd></div>
+      <div><dt>Prihlásenie</dt><dd>Firebase email</dd></div>
+    </dl>
+    <p *ngIf="!editingProfile()" class="profile-note">
+      {{ auth.user()?.displayName ? 'Uprav svoje meno v nastaveniach profilu.' : 'Profil ešte nemá uložené preferencie. Uprav profil a nastav si meno.' }}
+    </p>
+    <form *ngIf="editingProfile()" class="profile-edit-form" (ngSubmit)="saveProfile()">
+      <label for="profile-name">Meno</label>
+      <input
+        id="profile-name"
+        type="text"
+        [ngModel]="profileName()"
+        (ngModelChange)="profileName.set($event)"
+        name="profileName"
+        required
+      />
+    </form>
+    <p *ngIf="authError()" class="auth-message error-message" role="alert">{{ authError() }}</p>
+    <p *ngIf="authNotice()" class="auth-message success-message" role="status">{{ authNotice() }}</p>
+    <div class="profile-actions">
+      <button
+        *ngIf="!editingProfile()"
+        class="profile-action"
+        type="button"
+        (click)="profileName.set(auth.user()?.displayName ?? ''); editingProfile.set(true); authError.set(''); authNotice.set('')"
+      >
+        Upraviť profil
+      </button>
+      <button *ngIf="editingProfile()" class="profile-action" type="button" (click)="saveProfile()" [disabled]="authBusy()">
+        {{ authBusy() ? 'Ukladám…' : 'Uložiť profil' }}
+      </button>
+      <button *ngIf="editingProfile()" class="profile-action" type="button" (click)="editingProfile.set(false)">Zrušiť</button>
+      <button class="profile-action" type="button" (click)="logout()" [disabled]="authBusy()">Odhlásiť sa</button>
+    </div>
+  </section>
+</div>
